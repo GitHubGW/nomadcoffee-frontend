@@ -1,26 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useReactiveVar } from "@apollo/client";
+import { ThemeProvider } from "styled-components";
+import { isDarkModeVar } from "./apollo";
+import Router from "./Router";
+import GlobalStyle from "./styles/GlobalStyle";
+import { lightTheme, darkTheme } from "./styles/themes";
 
-function App() {
+const App = () => {
+  const isDarkMode: boolean = useReactiveVar(isDarkModeVar);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={isDarkMode === true ? darkTheme : lightTheme}>
+      <GlobalStyle />
+      <Router />
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
