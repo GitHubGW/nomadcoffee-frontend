@@ -1,14 +1,13 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useReactiveVar } from "@apollo/client";
 import { isLoggedInVar } from "./apollo";
 
 const Router = () => {
   const isLoggedIn: boolean = useReactiveVar(isLoggedInVar);
-  console.log("isLoggedIn", isLoggedIn);
 
   return (
     <BrowserRouter>
