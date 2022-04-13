@@ -1,4 +1,5 @@
-import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
+import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, makeVar } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
 const TOKEN: string = "TOKEN";
 const hasToken: boolean = Boolean(localStorage.getItem(TOKEN));
@@ -16,7 +17,13 @@ export const handleLogout = (): void => {
   isLoggedInVar(false);
 };
 
+const httpLink: ApolloLink = createHttpLink({ uri: "http://localhost:4000/graphql" });
+
+const authLink: ApolloLink = setContext((_, { headers }) => {
+  return { headers: { ...headers, token: localStorage.getItem(TOKEN) } };
+});
+
 export const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });

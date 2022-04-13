@@ -54,7 +54,6 @@ const Login = () => {
     register,
     handleSubmit,
     setError,
-    clearErrors,
     formState: { errors, isValid },
   } = useForm<LoginFormData>({ mode: "onChange", defaultValues: { username: state?.username || "", password: state?.password || "" } });
   const [login, { loading }] = useMutation(LOGIN, {
@@ -81,9 +80,9 @@ const Login = () => {
         </div>
         <SNotification>{state?.message}</SNotification>
         <form onSubmit={handleSubmit(onValid)}>
-          <SInput {...register("username", { required: "Username is required." })} onChange={() => clearErrors("result")} type="text" placeholder="Username" />
+          <SInput {...register("username", { required: "Username is required." })} type="text" placeholder="Username" />
           <FormError message={errors?.username?.message}></FormError>
-          <SInput {...register("password", { required: "Password is required." })} onChange={() => clearErrors("result")} type="password" placeholder="Password" />
+          <SInput {...register("password", { required: "Password is required." })} type="password" placeholder="Password" />
           <FormError message={errors?.password?.message}></FormError>
           <SAuthButton type="submit" disabled={!isValid || loading}>
             {loading ? "Loading..." : "Login"}

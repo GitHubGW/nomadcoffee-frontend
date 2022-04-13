@@ -4,10 +4,16 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
   ${reset};
 
+  *{
+    box-sizing:border-box;
+    font-family: 'Stylish', sans-serif;
+  }
   body{
     box-sizing: border-box;
     background-color: ${(props) => props.theme.bgColor};
     color: ${(props) => props.theme.textColor};
+    font-family: 'Stylish', sans-serif;
+    font-size:20px;
   }
   a{
     color:inherit;
@@ -15,6 +21,7 @@ const GlobalStyle = createGlobalStyle`
   }
   input{
     all:unset;
+    font-size:20px;
   }
 `;
 

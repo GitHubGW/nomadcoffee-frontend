@@ -1,19 +1,150 @@
 import styled from "styled-components";
-import Header from "../components/Header";
-import { handleLogout, isDarkModeVar } from "../apollo";
+import { handleLogout } from "../apollo";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
+import gql from "graphql-tag";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import Shop from "../components/Shop";
+import { useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
+
+const SEE_COFFEE_SHOPS = gql`
+  query SeeCoffeeShops($page: Int) {
+    seeCoffeeShops(page: $page) {
+      ok
+      message
+      totalCoffeeShops
+      coffeeShops {
+        id
+        name
+        latitude
+        longitude
+        createdAt
+        updatedAt
+        categories {
+          id
+          name
+          slug
+        }
+        user {
+          id
+          email
+          username
+          name
+        }
+      }
+    }
+  }
+`;
 
 const Container = styled.div`
-  height: 100vh;
+  padding: 20px;
+`;
+
+const SHeader = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const Title = styled.h1`
+  font-size: 65px;
+  font-weight: bold;
+`;
+
+const LogoutButton = styled.button`
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: ${(props) => props.theme.mainColor};
+  color: white;
+  text-align: center;
+  padding: 6px 18px;
+  border-radius: 5px;
+  font-size: 25px;
+  margin-left: 20px;
+`;
+
+const AddButton = styled(Link)`
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  padding: 13px;
+  background-color: white;
+  border-radius: 50%;
+  color: ${(props) => props.theme.mainColor};
+`;
+
+const PageButton = styled.button`
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-color: #2c2c2c;
+  color: white;
+  text-align: center;
+  padding: 6px 15px;
+  border-radius: 5px;
+  font-size: 25px;
+  margin-right: 5px;
+  margin-bottom: 20px;
 `;
 
 const Home = () => {
+  const [page, setPage] = useState<number>(1);
+  const [totalCoffeeShops, setTotalCoffeeShops] = useState<number>(0);
+  const { data, loading, refetch } = useQuery(SEE_COFFEE_SHOPS);
+
+  const handleGoToFirstPage = () => {
+    setPage(1);
+    refetch({ page: 1 });
+  };
+
+  const handleGoToPrevPage = () => {
+    if (page === 1) return;
+    setPage((page) => page - 1);
+    refetch({ page: page - 1 });
+  };
+
+  const handleGoToNextPage = () => {
+    if (Math.ceil(totalCoffeeShops / 5) === page) return;
+    setPage((page) => page + 1);
+    refetch({ page: page + 1 });
+  };
+
+  useEffect(() => {
+    if (data?.seeCoffeeShops?.totalCoffeeShops) {
+      setTotalCoffeeShops(data?.seeCoffeeShops?.totalCoffeeShops);
+    }
+  }, [data]);
+
   return (
-    <Container>
-      <Header />
-      <button onClick={handleLogout}>Logout!</button>
-      <button onClick={() => isDarkModeVar(false)}>Light</button>
-      <button onClick={() => isDarkModeVar(true)}>Dark</button>
-    </Container>
+    <div>
+      {loading === true ? (
+        "Loading..."
+      ) : (
+        <>
+          <Helmet>
+            <title>커피숍 메인</title>
+          </Helmet>
+          <Container>
+            <SHeader>
+              <Title>☕️ 커피숍 ☕️</Title>
+              <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+            </SHeader>
+            <PageButton onClick={handleGoToFirstPage}>첫 페이지</PageButton>
+            <PageButton onClick={handleGoToPrevPage}>←</PageButton>
+            <PageButton onClick={handleGoToNextPage}>→</PageButton>
+            {data?.seeCoffeeShops.coffeeShops.map((coffeeShop: any) => (
+              <Shop key={coffeeShop.id} coffeeShop={coffeeShop} />
+            ))}
+            <AddButton to="/add">
+              <FontAwesomeIcon icon={faPlus} size="3x"></FontAwesomeIcon>
+            </AddButton>
+          </Container>
+        </>
+      )}
+    </div>
   );
 };
 
