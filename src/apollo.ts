@@ -17,7 +17,9 @@ export const handleLogout = (): void => {
   isLoggedInVar(false);
 };
 
-const httpLink: ApolloLink = createHttpLink({ uri: "http://localhost:4000/graphql" });
+const httpLink: ApolloLink = createHttpLink({
+  uri: process.env.NODE_ENV === "production" ? "https://nomadcoffee-gw.herokuapp.com/graphql" : "http://localhost:4000/graphql",
+});
 
 const authLink: ApolloLink = setContext((_, { headers }) => {
   return { headers: { ...headers, token: localStorage.getItem(TOKEN) } };
