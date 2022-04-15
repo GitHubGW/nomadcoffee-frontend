@@ -14,6 +14,10 @@ const GlobalStyle = createGlobalStyle`
     color: ${(props) => props.theme.textColor};
     font-family: 'Stylish', sans-serif;
     font-size:20px;
+    background: url("background_main.jpeg") center center no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
   }
   a{
     color:inherit;

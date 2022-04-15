@@ -7,12 +7,13 @@ const ShopContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  width: 440px;
+  width: 430px;
   padding: 15px;
   box-sizing: border-box;
   background-color: #f5f5f5;
   border-radius: 10px;
   transition: 0.3s;
+  margin: 10px;
   &:hover {
     transform: scale(1.03);
   }

@@ -40,6 +40,10 @@ const SEE_COFFEE_SHOPS = gql`
 
 const Container = styled.div`
   padding: 20px;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const SHeader = styled.div`
@@ -47,6 +51,8 @@ const SHeader = styled.div`
   align-items: center;
   margin-bottom: 20px;
 `;
+
+const PageButtons = styled.div``;
 
 const Title = styled.h1`
   font-size: 65px;
@@ -63,7 +69,7 @@ const LogoutButton = styled.button`
   padding: 6px 18px;
   border-radius: 5px;
   font-size: 25px;
-  margin-left: 20px;
+  margin-bottom: 20px;
 `;
 
 const AddButton = styled(Link)`
@@ -90,6 +96,13 @@ const PageButton = styled.button`
   margin-bottom: 20px;
 `;
 
+const ShopContainer = styled.div`
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+`;
+
 const Home = () => {
   const [page, setPage] = useState<number>(1);
   const [totalCoffeeShops, setTotalCoffeeShops] = useState<number>(0);
@@ -107,7 +120,7 @@ const Home = () => {
   };
 
   const handleGoToNextPage = () => {
-    if (Math.ceil(totalCoffeeShops / 5) === page) return;
+    if (Math.ceil(totalCoffeeShops / 6) === page) return;
     setPage((page) => page + 1);
     refetch({ page: page + 1 });
   };
@@ -130,14 +143,18 @@ const Home = () => {
           <Container>
             <SHeader>
               <Title>☕️ 커피숍 ☕️</Title>
-              <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
             </SHeader>
-            <PageButton onClick={handleGoToFirstPage}>첫 페이지</PageButton>
-            <PageButton onClick={handleGoToPrevPage}>←</PageButton>
-            <PageButton onClick={handleGoToNextPage}>→</PageButton>
-            {data?.seeCoffeeShops.coffeeShops.map((coffeeShop: any) => (
-              <Shop key={coffeeShop.id} coffeeShop={coffeeShop} />
-            ))}
+            <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+            <PageButtons>
+              <PageButton onClick={handleGoToFirstPage}>첫 페이지</PageButton>
+              <PageButton onClick={handleGoToPrevPage}>←</PageButton>
+              <PageButton onClick={handleGoToNextPage}>→</PageButton>
+            </PageButtons>
+            <ShopContainer>
+              {data?.seeCoffeeShops.coffeeShops.map((coffeeShop: any) => (
+                <Shop key={coffeeShop.id} coffeeShop={coffeeShop} />
+              ))}
+            </ShopContainer>
             <AddButton to="/add">
               <FontAwesomeIcon icon={faPlus} size="3x"></FontAwesomeIcon>
             </AddButton>
