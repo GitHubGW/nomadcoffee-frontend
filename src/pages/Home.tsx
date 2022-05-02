@@ -10,8 +10,8 @@ import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 
 const SEE_COFFEE_SHOPS = gql`
-  query SeeCoffeeShops($page: Int) {
-    seeCoffeeShops(page: $page) {
+  query SeeAllCoffeeShops($page: Int!) {
+    seeAllCoffeeShops(page: $page) {
       ok
       message
       totalCoffeeShops
@@ -106,7 +106,7 @@ const ShopContainer = styled.div`
 const Home = () => {
   const [page, setPage] = useState<number>(1);
   const [totalCoffeeShops, setTotalCoffeeShops] = useState<number>(0);
-  const { data, loading, refetch } = useQuery(SEE_COFFEE_SHOPS);
+  const { data, loading, refetch } = useQuery(SEE_COFFEE_SHOPS, { variables: { page } });
 
   const handleGoToFirstPage = () => {
     setPage(1);
@@ -126,8 +126,8 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (data?.seeCoffeeShops?.totalCoffeeShops) {
-      setTotalCoffeeShops(data?.seeCoffeeShops?.totalCoffeeShops);
+    if (data?.seeAllCoffeeShops?.totalCoffeeShops) {
+      setTotalCoffeeShops(data?.seeAllCoffeeShops?.totalCoffeeShops);
     }
   }, [data]);
 
@@ -151,7 +151,7 @@ const Home = () => {
               <PageButton onClick={handleGoToNextPage}>→</PageButton>
             </PageButtons>
             <ShopContainer>
-              {data?.seeCoffeeShops.coffeeShops.map((coffeeShop: any) => (
+              {data?.seeAllCoffeeShops.coffeeShops.map((coffeeShop: any) => (
                 <Shop key={coffeeShop.id} coffeeShop={coffeeShop} />
               ))}
             </ShopContainer>
